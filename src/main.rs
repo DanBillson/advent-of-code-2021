@@ -1,3 +1,6 @@
+mod sonar_sweep;
+
 fn main() {
-    println!("Hello, world!");
+    // Day 1
+    sonar_sweep::run()
 }
