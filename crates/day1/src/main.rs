@@ -4,9 +4,14 @@ use std::{
     path::Path,
 };
 
+fn main() {
+    one();
+    two();
+}
+
 fn get_measurements() -> Vec<i32> {
     // Read entries from file and convert to an i32 vector
-    let path = Path::new("sonar_readings.txt");
+    let path = Path::new("input.txt");
     let display = path.display();
 
     let file = match File::open(&path) {
