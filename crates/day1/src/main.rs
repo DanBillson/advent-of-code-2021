@@ -1,66 +1,29 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-    path::Path,
-};
+const INPUT: &str = include_str!("input.txt");
 
 fn main() {
-    one();
-    two();
+    println!("problem1: {}", solve_problem1(INPUT));
+    println!("problem2: {}", solve_problem2(INPUT));
 }
 
-fn get_measurements() -> Vec<i32> {
-    // Read entries from file and convert to an i32 vector
-    let path = Path::new("input.txt");
-    let display = path.display();
-
-    let file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", display, why),
-        Ok(file) => file,
-    };
-
-    let reader = BufReader::new(file);
-
-    let v: Vec<i32> = reader
+fn numbers(input: &str) -> Vec<i32> {
+    let numbers = input
+        .trim()
         .lines()
-        .map(|line| line.unwrap().parse::<i32>().unwrap())
-        .collect();
-
-    v
+        .map(|i| i.parse::<i32>().unwrap())
+        .collect::<Vec<_>>();
+    numbers
 }
 
-fn count_increases(v: Vec<i32>) -> i32 {
-    let mut c = 0;
-
-    for (i, x) in v.iter().enumerate() {
-        if i > 0 && v[i - 1] < *x {
-            c = c + 1;
-        }
-    }
-
-    c
+fn solve_problem1(input: &str) -> usize {
+    numbers(input).windows(2).filter(|w| w[0] < w[1]).count()
 }
 
-pub fn one() {
-    let measurements = get_measurements();
-    let count = count_increases(measurements);
-
-    print!("{} ", count);
-}
-
-pub fn two() {
-    let v = get_measurements();
-    let sums: Vec<i32> = v
-        .iter()
-        .enumerate()
-        .map(|(i, x)| {
-            if i <= v.len() - 3 {
-                return *x + v[i + 1] + v[i + 2];
-            }
-            return 0;
-        })
-        .collect();
-    let count = count_increases(sums);
-
-    print!("{} ", count);
+fn solve_problem2(input: &str) -> usize {
+    numbers(input)
+        .windows(3)
+        .map(|w| -> i32 { w.iter().sum() })
+        .collect::<Vec<_>>()
+        .windows(2)
+        .filter(|w| w[0] < w[1])
+        .count()
 }
